@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invader Slayer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/reset.css">
+    <link type="text/css" rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- ===== OVERLAY DE PANTALLA COMPLETA ===== -->
+<div id="fullscreenPrompt" class="fullscreen-prompt">
+    <div class="fs-box">
+        <div class="fs-icon">⛶</div>
+        <h2>EXPERIENCIA COMPLETA</h2>
+        <p>Para la mejor experiencia, se recomienda pantalla completa</p>
+        <button id="btnFullscreen" class="btn-fs">PANTALLA COMPLETA</button>
+        <button id="btnSkipFs" class="btn-fs-skip">Continuar sin pantalla completa</button>
+    </div>
+</div>
+
+<!-- ===== MENÚ PRINCIPAL ===== -->
+<div id="menuPrincipal" class="screen active">
+    <div class="menu-bg-stars" id="menuStars"></div>
+    <div class="menu-content">
+        <div class="logo-area">
+            <div class="logo-img-wrap">
+                <img src="images/logo.png" alt="NAVES" class="logo-img" onerror="this.style.display='none'">
+            </div>
+            <div class="logo-subtitle">BATALLA INTERESTELAR</div>
+            <div class="logo-line"></div>
+        </div>
+
+        <!-- Campo nombre jugador -->
+        <div class="nombre-area">
+            <label class="label-nombre">COMANDANTE</label>
+            <input type="text" id="inputNombre" class="input-nombre" placeholder="Ingresa tu nombre" maxlength="16" autocomplete="off" />
+        </div>
+
+        <nav class="menu-nav">
+            <button class="menu-btn" id="btnJugar" onclick="game.startGame()">
+                <span class="btn-icon">▶</span> JUGAR
+            </button>
+            <button class="menu-btn" id="btnSelPersonaje" onclick="game.showScreen('screenPersonajes')">
+                <span class="btn-icon">✦</span> SELECCIONAR NAVE
+            </button>
+            <button class="menu-btn" id="btnOpciones" onclick="game.showScreen('screenOpciones')">
+                <span class="btn-icon">⚙</span> OPCIONES
+            </button>
+            <button class="menu-btn" id="btnTutorial" onclick="game.showScreen('screenTutorial')">
+                <span class="btn-icon">?</span> TUTORIAL
+            </button>
+            <button class="menu-btn btn-salir" onclick="game.exitGame()">
+                <span class="btn-icon">✕</span> SALIR
+            </button>
+        </nav>
+
+        <div class="menu-scores-preview">
+            <div class="scores-title">🏆 MEJORES COMANDANTES</div>
+            <ul id="puntuacionesMenu"></ul>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SELECCIÓN DE PERSONAJE ===== -->
+<div id="screenPersonajes" class="screen">
+    <div class="screen-header">
+        <button class="btn-back" onclick="game.showScreen('menuPrincipal')">← VOLVER</button>
+        <h2 class="screen-title">SELECCIÓN DE NAVE</h2>
+    </div>
+    <div class="personajes-grid">
+        <div class="personaje-card active" data-char="0" onclick="game.selectCharacter(0)">
+            <div class="char-img-wrap"><img src="images/bueno.png" alt="Nave Estándar"></div>
+            <div class="char-name">VANGUARDIA</div>
+            <div class="char-stats">
+                <div class="stat"><span>VIDA</span><div class="stat-bar"><div class="stat-fill" style="width:60%"></div></div></div>
+                <div class="stat"><span>VELOC.</span><div class="stat-bar"><div class="stat-fill" style="width:70%"></div></div></div>
+                <div class="stat"><span>DAÑO</span><div class="stat-bar"><div class="stat-fill" style="width:50%"></div></div></div>
+            </div>
+            <div class="char-desc">Equilibrada. Ideal para principiantes.</div>
+            <div class="char-badge unlocked">DESBLOQUEADA</div>
+        </div>
+        <div class="personaje-card locked" data-char="1" onclick="game.selectCharacter(1)">
+            <div class="char-img-wrap locked-img" id="charWrap1">
+                <div class="char-locked-icon">🔒</div>
+            </div>
+            <div class="char-name">INTERCEPTOR</div>
+            <div class="char-stats">
+                <div class="stat"><span>VIDA</span><div class="stat-bar"><div class="stat-fill" style="width:40%"></div></div></div>
+                <div class="stat"><span>VELOC.</span><div class="stat-bar"><div class="stat-fill" style="width:95%"></div></div></div>
+                <div class="stat"><span>DAÑO</span><div class="stat-bar"><div class="stat-fill" style="width:60%"></div></div></div>
+            </div>
+            <div class="char-desc">Muy rápida, poca armadura.</div>
+            <div class="char-badge">Completa nivel 3</div>
+        </div>
+        <div class="personaje-card locked" data-char="2" onclick="game.selectCharacter(2)">
+            <div class="char-img-wrap locked-img" id="charWrap2">
+                <div class="char-locked-icon">🔒</div>
+            </div>
+            <div class="char-name">DESTRUCTOR</div>
+            <div class="char-stats">
+                <div class="stat"><span>VIDA</span><div class="stat-bar"><div class="stat-fill" style="width:90%"></div></div></div>
+                <div class="stat"><span>VELOC.</span><div class="stat-bar"><div class="stat-fill" style="width:40%"></div></div></div>
+                <div class="stat"><span>DAÑO</span><div class="stat-bar"><div class="stat-fill" style="width:90%"></div></div></div>
+            </div>
+            <div class="char-desc">Lento pero devastador.</div>
+            <div class="char-badge">Completa nivel 6</div>
+        </div>
+    </div>
+    <div class="skins-section">
+        <h3 class="skins-title">SKINS DESBLOQUEADAS</h3>
+        <div class="skins-grid" id="skinsGrid"></div>
+    </div>
+</div>
+
+<!-- ===== OPCIONES ===== -->
+<div id="screenOpciones" class="screen">
+    <div class="screen-header">
+        <button class="btn-back" onclick="game.showScreen('menuPrincipal')">← VOLVER</button>
+        <h2 class="screen-title">OPCIONES</h2>
+    </div>
+    <div class="opciones-content">
+        <div class="opcion-group">
+            <label class="opcion-label">DIFICULTAD</label>
+            <div class="dificultad-btns">
+                <button class="diff-btn" data-diff="facil" onclick="game.setDifficulty('facil')">FÁCIL</button>
+                <button class="diff-btn active" data-diff="normal" onclick="game.setDifficulty('normal')">NORMAL</button>
+                <button class="diff-btn" data-diff="dificil" onclick="game.setDifficulty('dificil')">DIFÍCIL</button>
+            </div>
+            <div class="diff-desc" id="diffDesc">Velocidad normal, tiempo estándar.</div>
+        </div>
+        <div class="opcion-group">
+            <label class="opcion-label">MÚSICA DE FONDO</label>
+            <div class="toggle-row">
+                <span>OFF</span>
+                <label class="toggle"><input type="checkbox" id="toggleMusica" checked><span class="toggle-slider"></span></label>
+                <span>ON</span>
+            </div>
+            <input type="range" id="volMusica" class="vol-slider" min="0" max="100" value="50">
+        </div>
+        <div class="opcion-group">
+            <label class="opcion-label">EFECTOS DE SONIDO</label>
+            <div class="toggle-row">
+                <span>OFF</span>
+                <label class="toggle"><input type="checkbox" id="toggleSfx" checked><span class="toggle-slider"></span></label>
+                <span>ON</span>
+            </div>
+            <input type="range" id="volSfx" class="vol-slider" min="0" max="100" value="70">
+        </div>
+        <div class="opcion-group">
+            <label class="opcion-label">PANTALLA COMPLETA</label>
+            <button class="menu-btn" onclick="game.toggleFullscreen()">ALTERNAR PANTALLA COMPLETA</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TUTORIAL ===== -->
+<div id="screenTutorial" class="screen">
+    <div class="screen-header">
+        <button class="btn-back" onclick="game.showScreen('menuPrincipal')">← VOLVER</button>
+        <h2 class="screen-title">TUTORIAL</h2>
+    </div>
+    <div class="tutorial-content">
+        <!-- Demo animada en canvas -->
+        <div class="tut-demo-wrap">
+            <canvas id="tutCanvas" width="320" height="160"></canvas>
+            <div class="tut-demo-label" id="tutDemoLabel">Demostración</div>
+        </div>
+
+        <div class="tutorial-steps" id="tutorialSteps">
+            <div class="tut-step active" data-step="0">
+                <h3>⬅ ➡ &nbsp; MOVIMIENTO</h3>
+                <p>Usa las teclas <strong>IZQUIERDA</strong> y <strong>DERECHA</strong> para mover tu nave por la pantalla.</p>
+                <div class="tut-keys">
+                    <span class="tut-key">←</span>
+                    <span class="tut-key">→</span>
+                </div>
+            </div>
+            <div class="tut-step" data-step="1">
+                <h3>🚀 &nbsp; DISPARO</h3>
+                <p>Presiona <strong>ESPACIO</strong> para disparar. Mantén presionado para fuego continuo y elimina a todos los enemigos.</p>
+                <div class="tut-keys">
+                    <span class="tut-key tut-key-wide">ESPACIO</span>
+                </div>
+            </div>
+            <div class="tut-step" data-step="2">
+                <h3>⚡ &nbsp; DASH</h3>
+                <p>Presiona <strong>SHIFT</strong> para hacer un dash rápido lateral y esquivar disparos enemigos. Tiene un cooldown de 2 segundos.</p>
+                <div class="tut-keys">
+                    <span class="tut-key tut-key-wide">SHIFT</span>
+                </div>
+            </div>
+            <div class="tut-step" data-step="3">
+                <h3>🛡 &nbsp; ESCUDO</h3>
+                <p>Presiona <strong>S</strong> para activar el escudo temporal. Absorbe <strong>1 impacto</strong> sin perder vida. Solo disponible una vez por nivel.</p>
+                <div class="tut-keys">
+                    <span class="tut-key">S</span>
+                </div>
+            </div>
+            <div class="tut-step" data-step="4">
+                <h3>⏸ &nbsp; PAUSA</h3>
+                <p>Presiona <strong>P</strong> o <strong>ESC</strong> para pausar el juego en cualquier momento y acceder a opciones.</p>
+                <div class="tut-keys">
+                    <span class="tut-key">P</span>
+                    <span class="tut-key-sep">o</span>
+                    <span class="tut-key">ESC</span>
+                </div>
+            </div>
+            <div class="tut-step" data-step="5">
+                <h3>⏱ &nbsp; TIEMPO Y PUNTOS</h3>
+                <p>Cada nivel tiene un <strong>tiempo límite</strong>. Por cada enemigo eliminado ganas <strong>+10 segundos</strong> extra. ¡El jefe final vale más puntos!</p>
+                <div class="tut-tips">
+                    <div class="tut-tip">⚡ Elimina rápido para ganar tiempo</div>
+                    <div class="tut-tip">🛡 Usa el escudo contra el jefe</div>
+                    <div class="tut-tip">💥 El jefe tiene 2 fases de ataque</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tut-nav">
+            <button class="tut-btn" id="btnTutPrev" onclick="game.tutStep(-1)">◀ ANTERIOR</button>
+            <div class="tut-dots" id="tutDots"></div>
+            <button class="tut-btn" id="btnTutNext" onclick="game.tutStep(1)">SIGUIENTE ▶</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PANTALLA DE JUEGO ===== -->
+<div id="screenJuego" class="screen">
+    <!-- HUD superior -->
+    <div id="hud" class="hud">
+        <div class="hud-left">
+            <div class="hud-player-name" id="hudNombre">COMANDANTE</div>
+            <div class="hud-life-bar">
+                <span class="hud-label">VIDA</span>
+                <div class="hearts" id="hudHearts"></div>
+            </div>
+            <!-- Habilidades -->
+            <div class="hud-skills">
+                <div class="skill-icon" id="skillDash" title="DASH [SHIFT]">⚡</div>
+                <div class="skill-icon" id="skillShield" title="ESCUDO [S]">🛡</div>
+            </div>
+        </div>
+        <div class="hud-center">
+            <!-- Barra de progreso de nivel -->
+            <div class="hud-level-info">
+                <span class="hud-label">NIVEL</span>
+                <span id="hudNivel">1</span>
+            </div>
+            <div class="level-progress-bar">
+                <div class="level-progress-fill" id="levelProgressFill"></div>
+                <span class="level-progress-text" id="levelProgressText">0/7</span>
+            </div>
+            <!-- Cuenta regresiva -->
+            <div class="hud-timer" id="hudTimer">
+                <span class="hud-label">TIEMPO</span>
+                <span id="timerValue" class="timer-value">60</span>
+            </div>
+        </div>
+        <div class="hud-right">
+            <div class="hud-score-wrap">
+                <span class="hud-label">PUNTOS</span>
+                <span id="hudScore" class="hud-score">0</span>
+            </div>
+            <!-- Barra de vida del jefe -->
+            <div id="bossHpBar" class="boss-hp-bar hidden">
+                <span class="hud-label">JEFE</span>
+                <div class="boss-bar-outer">
+                    <div class="boss-bar-inner" id="bossBarInner"></div>
+                    <span class="boss-bar-text" id="bossBarText">12/12</span>
+                </div>
+            </div>
+            <button class="btn-pause" onclick="game.togglePause()" title="Pausar [P]">⏸</button>
+            <button class="btn-toggle-touch" onclick="game.toggleTouchControls()" title="Controles en pantalla">🎮</button>
+        </div>
+    </div>
+
+    <div class="canvas-wrap">
+        <canvas id="canvas" width="600" height="600">TU NAVEGADOR NO SOPORTA HTML5!</canvas>
+    </div>
+
+    <!-- ===== CONTROLES TÁCTILES (móvil / touch) ===== -->
+    <!-- Flechas izquierda — panel izquierdo fijo -->
+    <div id="touchControlsLeft" class="touch-panel touch-panel-left">
+        <button class="touch-btn touch-arrow" id="btnLeft"
+            ontouchstart="game.touchStart('left')" ontouchend="game.touchEnd('left')">◀</button>
+        <button class="touch-btn touch-arrow" id="btnRight"
+            ontouchstart="game.touchStart('right')" ontouchend="game.touchEnd('right')">▶</button>
+    </div>
+    <!-- Botones de acción — panel derecho fijo -->
+    <div id="touchControlsRight" class="touch-panel touch-panel-right">
+        <button class="touch-btn touch-fire" id="btnFire"
+            ontouchstart="game.touchStart('fire')" ontouchend="game.touchEnd('fire')">🔥</button>
+        <div class="touch-skills-col">
+            <button class="touch-btn touch-skill" id="btnDash"
+                ontouchstart="game.touchStart('dash')" ontouchend="game.touchEnd('dash')">⚡</button>
+            <button class="touch-btn touch-skill" id="btnShield"
+                ontouchstart="game.touchStart('shield')" ontouchend="game.touchEnd('shield')">🛡</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MENÚ DE PAUSA ===== -->
+<div id="menuPausa" class="overlay-menu hidden">
+    <div class="pause-box">
+        <div class="pause-title">⏸ PAUSADO</div>
+        <button class="menu-btn" onclick="game.togglePause()">▶ REANUDAR</button>
+        <button class="menu-btn" onclick="game.showScreen('screenOpciones')">⚙ OPCIONES</button>
+        <button class="menu-btn btn-salir" onclick="game.quitToMenu()">✕ SALIR AL MENÚ</button>
+    </div>
+</div>
+
+<!-- ===== GAME OVER ===== -->
+<div id="screenGameOver" class="screen">
+    <div class="gameover-content">
+        <div class="go-title">GAME OVER</div>
+        <div class="go-subtitle" id="goNombre">COMANDANTE</div>
+        <div class="go-score-box">
+            <div class="go-label">PUNTUACIÓN FINAL</div>
+            <div class="go-score" id="goScore">0</div>
+        </div>
+        <div class="go-btns">
+            <button class="menu-btn" onclick="game.restartGame()">🔄 REINTENTAR</button>
+            <button class="menu-btn btn-salir" onclick="game.quitToMenu()">🏠 MENÚ PRINCIPAL</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== CONGRATULATIONS ===== -->
+<div id="screenVictoria" class="screen">
+    <div class="victoria-content">
+        <div class="vic-title">¡VICTORIA!</div>
+        <div class="vic-subtitle" id="vicNombre">COMANDANTE</div>
+        <div class="vic-score-box">
+            <div class="go-label">PUNTUACIÓN TOTAL</div>
+            <div class="vic-score" id="vicScore">0</div>
+        </div>
+        <div class="vic-unlocks" id="vicUnlocks"></div>
+        <div class="go-btns">
+            <button class="menu-btn" onclick="game.restartGame()">🔄 JUGAR DE NUEVO</button>
+            <button class="menu-btn btn-salir" onclick="game.quitToMenu()">🏠 MENÚ PRINCIPAL</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PUNTUACIONES SIDEBAR (pantalla juego) ===== -->
+<div id="sidebar" class="sidebar hidden">
+    <h3 class="tituloPuntuaciones">🏆 MEJORES</h3>
+    <ul id="puntuaciones"></ul>
+</div>
+
+<!-- Audio (Web Audio API generado en JS) -->
+<script src="js/videojuego-javascript.js"></script>
+</body>
+</html>
